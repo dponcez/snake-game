@@ -1,0 +1,109 @@
+:root {
+  --sz: 100%;
+  --svh: 100svh;
+  --unit: 5;
+  --pd: 1.25rem;
+  --rd: .3lh;
+  --border-sz: 25rem;
+  --fnt-sz: calc((var(--pd) / 2 ) * var(--unit));
+  --fnt-play: 'Play', sans-serif;
+  --fnt-abel: 'Abel', sans-serif;
+  --dark-color : hsl(196, 63%, 33%);
+  --light-color: hsl(210, 12%, 97%);
+  --blue-color : hsl(204, 70%, 53%);
+  --light-gray : hsl(192, 15%, 94%);
+  --hue        : 250;
+  --saturation : 45%;
+  --lightness  : 97%
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+:where(html, body, p) { margin: 0; }
+:where(.container, .game--container, .game--board) {
+  display: grid;
+  place-items: center;
+}
+:where(.score--container, .info) {
+  display: flex;
+  align-items: center;
+}
+
+body {
+  background-image: linear-gradient(45deg,
+  hsl(calc(var(--hue) * 2),
+    calc(var(--saturation) * 1.35),
+    calc(var(--lightness) * .90)),
+  hsl(var(--hue), var(--saturation), var(--lightness)));
+}
+
+.container {
+  height: var(--svh);
+  width: var(--sz);
+  .game--container {
+    .score--container {
+      justify-content: space-between;
+      width: var(--sz);
+      padding-block-end: calc(var(--pd) * .5);
+      .info {
+        justify-content: center;
+        font: 700 calc(var(--fnt-sz) / 3) var(--fnt-play);
+        text-transform: capitalize;
+        &:has(span) { color: var(--dark-color); }
+        & :where(span) {
+          margin-inline-start: .25rem;
+          font-weight: 500; 
+        }
+        .high--score { color: var(--blue-color)}
+      }
+    }
+    .game--board {
+      --color: hsl(calc(var(--hue) * 1.25), calc(var(--saturation) * .5), calc(var(--lightness) * 1.25));
+      --border: hsl(calc(var(--hue) * 2.7), calc(var(--saturation) * .2), calc(var(--lightness) * .5));
+      grid-template-columns: repeat(20, 20px);
+      grid-template-rows: repeat(20, 20px);
+      width: var(--border-sz);
+      height: var(--border-sz);
+      position: relative;
+      background-image: linear-gradient(
+        0deg,
+        hsl(
+          calc(var(--hue) * 3.2), 
+          calc(var(--saturation) * 1.75), 
+          calc(var(--lightness) * .75)
+        ),
+        hsl(
+          calc(var(--hue) * 2.25), 
+          calc(var(--saturation) * .75), 
+          calc(var(--lightness) * .75)
+        )
+
+      );
+      border: calc(var(--rd) * .75) var(--border) solid;
+      &::before {
+        content: '';
+        position: absolute;
+        width: var(--sz);
+        border: .1lh solid var(--dark-color);
+        top: -.7rem;
+        border-radius: .2rem;
+      }
+      .snake {
+        width: calc(var(--pd) * .65);
+        height: calc(var(--pd) * .65);
+        background-color: var(--color);
+        border: .15lh var(--border) solid;
+        border-radius: 0 .3lh .3lh 0;
+      }
+      .food {
+        width: calc(var(--pd) * .6);
+        height: calc(var(--pd) * .6);
+        background-color: hsl(12, 89%, 28%);
+        border: .15lh var(--border) solid;
+        border-radius: 50%;
+      }
+    }
+  }
+}
