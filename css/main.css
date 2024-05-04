@@ -95,7 +95,6 @@ body {
         height: calc(var(--pd) * .65);
         background-color: var(--color);
         border: .15lh var(--border) solid;
-        border-radius: 0 .3lh .3lh 0;
       }
       .food {
         width: calc(var(--pd) * .6);
