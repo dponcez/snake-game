@@ -21,13 +21,18 @@
 *::after { box-sizing: border-box; }
 
 :where(html, body, p) { margin: 0; }
-:where(.container, .game--container, .game--board) {
+:where(.grid) {
   display: grid;
   place-items: center;
 }
-:where(.score--container, .info) {
+:where(.flex) {
   display: flex;
   align-items: center;
+}
+:where(.absolute) { position: absolute; }
+:where(.snake, .food) {
+  width: calc(var(--pd) * .65);
+  height: calc(var(--pd) * .65)
 }
 
 body {
@@ -39,10 +44,12 @@ body {
 }
 
 .container {
-  height: var(--svh);
   width: var(--sz);
+  height: var(--svh);
   .game--container {
+    position: relative;
     .score--container {
+      display: none;
       justify-content: space-between;
       width: var(--sz);
       padding-block-end: calc(var(--pd) * .5);
@@ -55,13 +62,13 @@ body {
           margin-inline-start: .25rem;
           font-weight: 500; 
         }
-        .high--score { color: var(--blue-color)}
+        .high--score { color: var(--blue-color); }
       }
     }
     .game--board {
       --border: hsl(calc(var(--hue) * 2.7), calc(var(--saturation) * .2), calc(var(--lightness) * .5));
-      grid-template-columns: repeat(20, 1.25em);
-      grid-template-rows: repeat(20, 1.25em);
+      grid-template-columns: repeat(20, var(--pd));
+      grid-template-rows: repeat(20, var(--pd));
       position: relative;
       background-image: linear-gradient(
         0deg,
@@ -86,18 +93,40 @@ body {
         top: -.7rem;
         border-radius: .2rem;
       }
+      & :where(.snake, .food) { border: .15lh var(--border) solid }
       .snake {
-        width: calc(var(--pd) * .65);
-        height: calc(var(--pd) * .65);
+        width: var(--pd);
+        height: var(--pd);
         background-color: var(--light-gray);
-        border: .15lh var(--border) solid;
       }
       .food {
-        width: calc(var(--pd) * .6);
-        height: calc(var(--pd) * .6);
         background-color: hsl(12, 89%, 28%);
-        border: .15lh var(--border) solid;
         border-radius: 50%;
+      }
+    }
+    .description--container {
+      justify-content: center;
+      flex-direction: column;
+      width: var(--sz);
+      height: var(--sz);
+      inset: 50%;
+      transform: translate(-50%, -50%);
+      .snake--image {
+        --img-sz: calc(var(--pd) * 20.4);
+        width: var(--img-sz);
+        height: var(--img-sz);
+        object-fit: cover;
+        bottom: 0
+      }
+      .description {
+        font: 500 var(--pd) var(--fnt-abel);
+        bottom: 0;
+        &::first-letter { text-transform: capitalize; }
+        span {
+          text-transform: uppercase;
+          font-family: var(--fnt-play);
+          font-weight: bold;
+        }
       }
     }
   }
