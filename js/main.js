@@ -58,6 +58,7 @@ const initApp = () => {
     gameBoard.innerHTML = '';
     drawSnake();
     drawSnakeFood();
+    createSnakeBricks();
     updateScore()
   }
 
@@ -73,6 +74,12 @@ const initApp = () => {
     const snakeFood = createSnakeElement('div', 'food');
     setSnakePosition(snakeFood, food);
     gameBoard.appendChild(snakeFood);
+  }
+
+  const createSnakeBricks = () => {
+    const snakeBrick = createSnakeElement('div', 'brick');
+    setSnakePosition(snakeBrick, brick);
+    gameBoard.appendChild(snakeBrick)
   }
   
   const setSnakePosition = (element, position) => {
@@ -92,7 +99,14 @@ const initApp = () => {
     return { x, y }
   }
 
-  let food = generateRandomFood()
+  const generateSnakeBrick = () => {
+    const x = Math.floor(Math.random() * GRID_SIZE) + 1;
+    const y = Math.floor(Math.random() * GRID_SIZE) + 1;
+    return { x, y }     
+  }
+
+  let food = generateRandomFood();
+  let brick = generateSnakeBrick()
 
   const snakeMovement = () => {
     const head = { ...snakeCoords[0] };
@@ -106,12 +120,14 @@ const initApp = () => {
 
     if(head.x === food.x && head.y === food.y){
       food = generateRandomFood();
+      brick = generateSnakeBrick();
       incrementSpeedLimit(); 
       clearInterval(interval);
 
       interval = setInterval(() => {
-        snakeMovement()
-        snakeCollision()
+        snakeMovement();
+        snakeCollision();
+        // snakebrickCollsion();
         start();
       }, speedLimit)
     }else{
@@ -127,7 +143,8 @@ const initApp = () => {
     clearInterval(interval);
     interval = setInterval(() => {
       snakeMovement();
-      snakeCollision()
+      snakeCollision();
+      // snakebrickCollsion();
       start();
     }, speedLimit);
   }
@@ -147,20 +164,10 @@ const initApp = () => {
       startGame()
     }else{
 
-      switch(KEY){
-        case left:
-          direction = 'left';
-          break;
-        case up:
-          direction = 'up';
-          break;
-        case right:
-          direction = 'right';
-          break;
-        case down:
-          direction = 'down';
-          break
-      }
+      if(KEY === left) return direction = 'left';
+      if(KEY === up) return direction = 'up';
+      if(KEY === right) return direction = 'right';
+      if(KEY === down) return direction = 'down'
     }
   }
 
@@ -222,16 +229,17 @@ const initApp = () => {
 
   const updateScore = () => {
     const currentScore = snakeCoords.length - 1;
-    const CURRENT_PAD = currentScore.toString().padStart(3, '0');
-    score.textContent = CURRENT_PAD
+    const STRING = currentScore.toString().padStart(3, '0');
+    score.textContent = STRING
   }
 
   const updateHighScore = () => {
     const currentScore = snakeCoords.length - 1;
+
     if(currentScore > scoreContent){
       scoreContent = currentScore;
-      const CURRENT_PAD = currentScore.toString().padStart(3, '0');
-      highScore.textContent = CURRENT_PAD
+      const STRING = currentScore.toString().padStart(3, '0');
+      highScore.textContent = STRING
     }
   }
 }
