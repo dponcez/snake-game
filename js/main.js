@@ -71,9 +71,11 @@ const initApp = () => {
   }
 
   const drawSnakeFood = () => {
-    const snakeFood = createSnakeElement('div', 'food');
-    setSnakePosition(snakeFood, food);
-    gameBoard.appendChild(snakeFood);
+    if(gameStarted){
+      const snakeFood = createSnakeElement('div', 'food');
+      setSnakePosition(snakeFood, food);
+      gameBoard.appendChild(snakeFood);  
+    }
   }
 
   const createSnakeBricks = () => {
@@ -121,13 +123,13 @@ const initApp = () => {
     if(head.x === food.x && head.y === food.y){
       food = generateRandomFood();
       brick = generateSnakeBrick();
-      incrementSpeedLimit(); 
-      clearInterval(interval);
+      incrementSpeedLimit();
 
+      clearInterval(interval);
       interval = setInterval(() => {
         snakeMovement();
         snakeCollision();
-        // snakebrickCollsion();
+        snakeBrickCollision();
         start();
       }, speedLimit)
     }else{
@@ -144,30 +146,31 @@ const initApp = () => {
     interval = setInterval(() => {
       snakeMovement();
       snakeCollision();
-      // snakebrickCollsion();
+      snakeBrickCollision();
       start();
     }, speedLimit);
   }
 
   const setSnakeDirection = (event) => {
-    const arrowKeys = {
-      left: 'ArrowLeft',
-      up: 'ArrowUp',
-      right: 'ArrowRight',
-      down: 'ArrowDown'
-    }
+    const keyboardEvents = [{
+      "left": "ArrowLeft",
+      "up": "ArrowUp",
+      "right": "ArrowRight",
+      "down": "ArrowDown"
+    }]
 
-    const { left, up, right, down } = arrowKeys;
     const KEY = event.key;
 
     if((!gameStarted && event.code === 'Space')){
       startGame()
     }else{
 
-      if(KEY === left) return direction = 'left';
-      if(KEY === up) return direction = 'up';
-      if(KEY === right) return direction = 'right';
-      if(KEY === down) return direction = 'down'
+      keyboardEvents.forEach(arrow => {
+        if(KEY === arrow.left) direction = 'left';
+        if(KEY === arrow.up) direction = 'up';
+        if(KEY === arrow.right) direction = 'right';
+        if(KEY === arrow.down) direction = 'down'
+      })
     }
   }
 
@@ -205,6 +208,14 @@ const initApp = () => {
     }
   }
 
+  const snakeBrickCollision = () => {
+    const head = { ...snakeCoords[0] };
+
+    if (head.x === brick.x && head.y === brick.y) {
+      resetGame();
+    }
+  };
+
   const resetGame = () => {
     updateHighScore();
     stopGame();
@@ -212,7 +223,7 @@ const initApp = () => {
     gameDescription.style.display = 'flex';
     setTimeout(() => {
       scoreContainer.style.display = 'none'
-    }, 3000)
+    }, 5000)
 
     snakeCoords = [{ x: 10, y: 10 }];
     food = generateRandomFood();
