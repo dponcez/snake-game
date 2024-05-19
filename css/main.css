@@ -8,12 +8,17 @@
   --fnt-sz: calc((var(--pd) / 2 ) * var(--unit));
   --fnt-play: 'Play', sans-serif;
   --fnt-abel: 'Abel', sans-serif;
-  --dark-color : hsl(196, 63%, 33%);
-  --blue-color : hsl(204, 70%, 53%);
-  --light-gray : hsl(192, 15%, 94%);
-  --hue        : 250;
-  --saturation : 45%;
-  --lightness  : 97%
+  --dark-color: hsl(196, 63%, 33%);
+  --blue-color: hsl(204, 70%, 53%);
+  --light-gray: hsl(192, 15%, 94%);
+  --red-color: hsl(12, 82%, 37%);
+  --gray-brick-color: hsl(0, 5%, 75%);
+  --dark-green: hsl(149, 85%, 23%);
+  --middle-green: hsl(114, 38%, 48%);
+  --forest-green: hsl(69, 76%, 42%);
+  --hue: 250;
+  --saturation: 45%;
+  --lightness: 97%
 }
 
 *,
@@ -93,16 +98,24 @@ body {
         top: -.7rem;
         border-radius: .2rem;
       }
-      & :where(.snake, .food) { border: .15lh var(--border) solid }
-      .snake {
+      & :where(.food, .brick) { border: .15lh var(--border) solid }
+      & :where(.snake, .brick) {
         width: var(--pd);
         height: var(--pd);
-        background-color: var(--light-gray);
+      }
+      .snake {
+        background-image: linear-gradient(
+          45deg,
+          var(--dark-green),
+          var(--middle-green)
+        );
+        border: .15lh solid var(--forest-green)
       }
       .food {
-        background-color: hsl(12, 89%, 28%);
+        background-color: var(--red-color);
         border-radius: 50%;
       }
+      .brick { background-color: var(--gray-brick-color); }
     }
     .description--container {
       justify-content: center;
