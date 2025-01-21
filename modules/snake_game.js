@@ -29,7 +29,8 @@ export const initGame = () => {
 
   drawSnake();
   drawSnakeFood();
-  drawSnakeBricks()
+  drawSnakeBricks();
+  updateScore()
 }
 
 const drawSnake = () => {
@@ -68,16 +69,43 @@ const snakePosition = (element, position) => {
 let food = generateGameElement(GRID_SIZE);
 let brick = generateGameElement(GRID_SIZE);
 
-const snakeMovement = () => {}
+const snakeMovement = () => {
+  const HEAD = { ...snakeCoords[0] };
+
+  if(direction === 'left') HEAD.x--;
+  if(direction === 'up') HEAD.y--;
+  if(direction === 'right') HEAD.x++;
+  if(direction === 'down') HEAD.y++;
+
+  snakeCoords.unshift(HEAD);
+
+  if(HEAD.x === food.x && HEAD.y === food.y){
+    food = generateGameElement(GRID_SIZE);
+    brick = generateGameElement(GRID_SIZE);
+    incrementSpeedLimit();
+
+    clearInterval(interval);
+    interval = setInterval(() => {
+      snakeMovement();
+      snakeCollision();
+      snakeBrickCollision();
+      initGame()
+    }, speedLimit)
+  }else{
+    snakeCoords.pop()
+  }
+}
 
 const startSnakeGame = () => {
   gameStarted = true;
-  gameDescription.style.display ='none';
+  gameDescription.style.display = 'none';
   scoreContainer.style.display = 'flex';
 
   clearInterval(interval);
   interval = setInterval(() => {
-
+    snakeMovement();
+    snakeCollision();
+    snakeBrickCollision();
     initGame()
   }, speedLimit)
 }
@@ -91,30 +119,94 @@ const setSnakeDirection = (event) => {
   }];
 
   const KEY = event.key;
+  const KEY_CODE = event.code;
 
-  if((!gameStarted && event.code === "Space")){
+  if((!gameStarted && KEY_CODE === 'Space')){
+    gameStarted = true;
     startSnakeGame()
   }else{
     keyboardEvents.forEach(arrow => {
-      if(KEY === arrow.left) direction = "left";
-      if(KEY === arrow.up) direction = "up";
-      if(KEY === arrow.right) direction = "right";
-      if(KEY === arrow.down) direction = "down"
+      const { left, up, right, down } = arrow;
+
+      if(KEY === left) direction = 'left';
+      if(KEY === up) direction = 'up';
+      if(KEY === right) direction = 'right';
+      if(KEY === down) direction = 'down'
     })
   }
 }
 
-// eventHandler(document, 'keydown', debounce((e) => setSnakeDirection(e)))
+// eventHandler(document, 'keydown', debounce(() => setSnakeDirection))
 eventHandler(document, 'keydown', setSnakeDirection)
 
-const incrementSpeedLimit = () => {}
+const incrementSpeedLimit = () => {
+  if(speedLimit > 150) speedLimit -= 5;
+  if(speedLimit > 100) speedLimit -= 3;
+  if(speedLimit > 50) speedLimit -= 2;
+}
 
-const snakeCollision = () => {}
+const snakeCollision = () => {
+  const HEAD = snakeCoords[0];
+  
+  const X_AXIS_COLLISION = (HEAD.x < 1 || HEAD.x > GRID_SIZE);
+  const Y_AXIS_COLLISION = (HEAD.y < 1 || HEAD.y > GRID_SIZE);
 
-const snakeBrickCollision = () => {}
+  if(X_AXIS_COLLISION || Y_AXIS_COLLISION){
+    resetSnakeGame()
+  }
 
-const resetSnakeGame = () => {}
+  for(let i = 1; i < snakeCoords.length; i++){
+    const X_COORD = HEAD.x === snakeCoords[i].x;
+    const Y_COORD = HEAD.y === snakeCoords[i].y;
 
-const updateScore = () => {}
+    if(X_COORD && Y_COORD){
+      resetSnakeGame()
+    }
+  }
+}
 
-const updateHighScore = () => {}
+const snakeBrickCollision = () => {
+  const HEAD = { ...snakeCoords[0] };
+
+  if(HEAD.x === brick.x && HEAD.y === brick.y){
+    resetSnakeGame()
+  }
+}
+
+const resetSnakeGame = () => {
+  updateHighScore();
+  stopGame();
+
+  gameDescription.style.display = 'flex';
+  setTimeout(() => {
+    scoreContainer.style.display = 'none';
+  }, 5000);
+
+  snakeCoords = [{ x: 10, y: 10 }];
+  food = generateGameElement(GRID_SIZE);
+  direction = 'right';
+  speedLimit = 200;
+
+  updateScore()
+}
+
+const stopGame = () => {
+  gameStarted = false;
+  clearInterval(interval);
+}
+
+const updateScore = () => {
+  const currentScore = snakeCoords.length - 1;
+  const STRING = currentScore.toString().padStart(3, '0');
+  score.textContent = STRING
+}
+
+const updateHighScore = () => {
+  const currentScore = snakeCoords.length - 1;
+  
+  if(currentScore > scoreIndex){
+    scoreIndex = currentScore;
+    const STRING = currentScore.toString().padStart(3, '0');
+    highScore.textContent = STRING
+  }
+}
