@@ -136,8 +136,8 @@ const setSnakeDirection = (event) => {
   }
 }
 
-// eventHandler(document, 'keydown', debounce(() => setSnakeDirection))
-eventHandler(document, 'keydown', setSnakeDirection)
+const handleKeyPress = debounce(setSnakeDirection, 300)
+eventHandler(document, 'keydown', handleKeyPress)
 
 const incrementSpeedLimit = () => {
   if(speedLimit > 150) speedLimit -= 5;
@@ -179,7 +179,7 @@ const resetSnakeGame = () => {
 
   gameDescription.style.display = 'flex';
   setTimeout(() => {
-    scoreContainer.style.display = 'none';
+    scoreContainer.style.visibility = 'hidden';
   }, 5000);
 
   snakeCoords = [{ x: 10, y: 10 }];
