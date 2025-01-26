@@ -126,6 +126,86 @@ The ```debounce()``` function forces a function to wait a few times before runni
   }
 ```
 
+### Code Explanation
+-----
+
+1. **Imported elements**
+
+First of all, we need to import all the elements and functions that our snake game needs to work.
+
+```js
+import { selector } from "./custom_functions.js";
+import { createElement } from "./custom_functions.js";
+import { eventHandler } from "./custom_functions.js";
+import { generateGameElement } from "./custom_functions.js";
+import { debounce } from "../utils/debounce.js";
+```
+
+2. **Variables**
+
+We will create global variables to use anywhere in the code.
+
+```js
+let snakeCoords = [{x: 10, y: 10}];
+let direction = 'right';
+let gameStarted = false;
+let speedLimit = 200;
+let scoreIndex = 0;
+let interval;
+
+const GRID_SIZE = 20;
+```
+
+**Explanation**
+
+- **```let snakeCoords = [{x: 10, y: 10}]```**: an array called _snakeCoords_ is created, which stores the coordinates of each segment of the snake.
+
+- **```let direction = 'right```**: the initial direction of the snake is set to the _'right'_ position.
+
+- **```let gameStarted = false```**: this variable indicates if the snake game has been started.
+
+- **```let speedLimit = 200```**: determines the speed of the snake, a lower value means the game will be faster.
+
+- **```let scoreIndex = 0```**: it will be used to store the player's score.
+
+- **```let interaval```**: will be used to store the interval identifier, whice controls the duration of the snake's movements and its update.
+
+- **```const GRID_SIZE: 20```**: this variable defines the dimensions of the grid size and also, to be able to limit the movement of the snake.
+
+3. **Objects**
+
+An _htmlRefs_ variable is created to store the references of the _HTML_ elements, which will be used in the game.
+
+```js
+const htmlRefs = {
+  score: selector('[data-score]'),
+  highScore: selector('[data-high-score]'),
+  gameBoard: selector('[data-game-board]'),
+  gameDescription: selector('[data-game-description]'),
+  scoreContainer: selector('.score--container')
+}
+```
+
+**Explanation**
+
+- **```score: selector('[data-score]')```**: it's use to obtain _HTML_ references that have the _data-score_ attribute, which stores the player's score.
+
+- **```highScore: selector('[data-high-score]')```**: it's use to obtain _HTML_ references that have the _data--high-score_ attribute, which stores the player's high score.
+
+- **```gameBoard: selector('[data-game-board]')```**: it's use to obtain _HTML_ references that have the _data-game-board_ attribute, whice repesents of the board of the game.
+
+- **```gameDescription: selector('[data-game-description]')```**: it's use to get _HTML_ references that have the _data-game-description_ attribute, which represents the game description.
+
+- **```scoreContainer: selector('.score-container')```**: is used to get _HTML_ references that has the _.score--container_ class.
+
+4. **Desctructuring**
+
+Destructures the object, to assign the properties to individual variables with the same names, this makes it easier to access these elements in the rest of the code.
+
+```js
+const { score, highScore, gameBoard, gameDescription, scoreContainer } = htmlRefs
+``` 
+
 ### License
 -----
 
