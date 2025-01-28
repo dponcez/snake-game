@@ -206,6 +206,93 @@ Destructures the object, to assign the properties to individual variables with t
 const { score, highScore, gameBoard, gameDescription, scoreContainer } = htmlRefs
 ``` 
 
+5. **Functions**
+
+A function is a block of code that can be executed multiple times from different parts of a program, and that performs a specific task. Functions are fundamental in any programming language and are used to:
+
+- _Organize the code_: divide the code into logical and reusable blocks.
+
+- _Reuse code_: avoid code repetition and reduce complexity.
+
+- _Abstrac logic_: hide the implementation of a task and show only its interface.
+
+- _Improve readability_: make code easier to understand and maintain.
+
+1. **initGame**
+
+```js
+export const initGame = () => {
+  gameBoard.innerHTML = '';
+
+  drawSnake();
+  drawSnakeFood();
+  drawSnakeBricks();
+  updateScore()
+}
+```
+
+**Explanation**
+
+- **```export const initGame = () => {}```**: is the main function that can be exported and used in another module of the project.
+
+- **```gameBoard.innerHTML = ''```**: delete all _HTML_ content from the element, to prepare the game board.
+
+- **```drawSnake()```**: this function draws the snake on the board.
+
+- **```drawSnakeFood()```**: this function draws the snake's food on the board.
+
+- **```drawSnakeBricks()```**: this function draws obstacles on the board.
+
+- **```updateScore()```**: this function updates the player's score.
+
+**drawSnake**
+
+```js
+const drawSnake = () => {
+  snakeCoords.forEach(segment => {
+    const SNAKE = createSnakeElement('div', 'snake');
+    snakePosition(SNAKE, segment);
+    gameBoard.appendChild(SNAKE)
+  })
+}
+```
+
+**Explanation**
+
+- **```const drawSnake = () => {}```**: this function was defined to draw the snake on the board.
+
+- **```snakeCoords.forEach()```**: interate over an array called _snakeCoords_ that contains the coordinates of each segment of the snake.
+
+- **```const SNAKE = createSnakeElement()```**: create a new _HTML_ element (a &lt;div&gt;) with the snake class to represent a segment of the snake.
+
+- **```snakePosition()```**: place the snake segment in the correct position on the board. The _snakePosition_ function uses the segment coordinates to calculate the position.
+
+- **```gameBoard.appendChild()```**: adds the snake segment to the _gameBoard_ element.
+
+**drawSnakeFood**
+
+```js
+const drawSnakeFood = () => {
+  if(gameStarted){
+    const SNAKE_FOOD = createSnakeElement('div', 'food');
+    snakePosition(SNAKE_FOOD, food);
+    gameBoard.appendChild(SNAKE_FOOD)
+  }
+}
+```
+
+**Explanation**
+
+- **```const drawSnakeFood = () => {}```**: defines a function to draw the food on the board.
+
+- **```if(gameStarted){}```**: checks if the game has started before drawing the food.
+
+- **```const SNAKE_FOOD = createSnakeElement()```**: creates a new _HTML_ element to represent the food.
+
+- **```snakePosition()```**: place the food in the correct position on the board.
+
+- **```gameBoard.appendChild()```**: adds the food to the _gameBoard_ element
+
 ### License
 -----
 
