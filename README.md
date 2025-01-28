@@ -12,7 +12,7 @@ __Technologies__
 - [CSS3](https://developer.mozilla.org/en-US/docs/Web/CSS)
 - [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
-__Souce code editor__
+__Source code editor__
 
 - [VSCode](https://code.visualstudio.com)
 
@@ -160,7 +160,7 @@ const GRID_SIZE = 20;
 
 - **```let snakeCoords = [{x: 10, y: 10}]```**: an array called _snakeCoords_ is created, which stores the coordinates of each segment of the snake.
 
-- **```let direction = 'right```**: the initial direction of the snake is set to the _'right'_ position.
+- **```let direction = 'right'```**: the initial direction of the snake is set to the _'right'_ position.
 
 - **```let gameStarted = false```**: this variable indicates if the snake game has been started.
 
@@ -170,7 +170,7 @@ const GRID_SIZE = 20;
 
 - **```let interaval```**: will be used to store the interval identifier, whice controls the duration of the snake's movements and its update.
 
-- **```const GRID_SIZE: 20```**: this variable defines the dimensions of the grid size and also, to be able to limit the movement of the snake.
+- **```const GRID_SIZE = 20```**: this variable defines the dimensions of the grid size and also, to be able to limit the movement of the snake.
 
 3. **Objects**
 
@@ -190,13 +190,13 @@ const htmlRefs = {
 
 - **```score: selector('[data-score]')```**: it's use to obtain _HTML_ references that have the _data-score_ attribute, which stores the player's score.
 
-- **```highScore: selector('[data-high-score]')```**: it's use to obtain _HTML_ references that have the _data--high-score_ attribute, which stores the player's high score.
+- **```highScore: selector('[data-high-score]')```**: it's use to obtain _HTML_ references that have the _data-high-score_ attribute, which stores the player's high score.
 
 - **```gameBoard: selector('[data-game-board]')```**: it's use to obtain _HTML_ references that have the _data-game-board_ attribute, whice repesents of the board of the game.
 
 - **```gameDescription: selector('[data-game-description]')```**: it's use to get _HTML_ references that have the _data-game-description_ attribute, which represents the game description.
 
-- **```scoreContainer: selector('.score-container')```**: is used to get _HTML_ references that has the _.score--container_ class.
+- **```scoreContainer: selector('.score--container')```**: is used to get _HTML_ references that has the _.score--container_ class.
 
 4. **Desctructuring**
 
