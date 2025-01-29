@@ -291,7 +291,47 @@ const drawSnakeFood = () => {
 
 - **```snakePosition()```**: place the food in the correct position on the board.
 
-- **```gameBoard.appendChild()```**: adds the food to the _gameBoard_ element
+- **```gameBoard.appendChild()```**: adds the food to the _gameBoard_ element.
+
+**drawSnakeBricks**
+
+```js
+const drawSnakeBricks = () => {
+  const SNAKE_BRICK = createSnakeElement('div', 'brick');
+  snakePosition(SNAKE_BRICK, brick);
+  gameBoard.appendChild(SNAKE_BRICK)
+}
+```
+
+**Explanation**
+
+- **```const drawSnakeBricks = () => {}```**: this function will be executed every time we need to draw the bricks in the game.
+
+- **```const SNAKE_BRICK = createSnakeElement()```**: this constant variable will store an _HTML_ element of type &lt;div&gt;.
+
+- **```crateSnakeElement()```**: this function is resposible for creating this element and assigning it the 'brick' class. This class will be uses to apply specific _CSS_ styles to bricks.
+
+- **```snakePosition()```**: this line places the brick in a specific position within the game board. This function is resposible for calculating the exact position of the brick based on the coordinates passed to it as an argument.
+
+- **```gameBoard.appendChild()```**: this line adds the brick we just created to the _HTML_ element that represents the game board. This makes the brick visible on the screen.
+
+**createSnakeElement**
+
+```js
+const createSnakeElement = (tag, name) => {
+  const element = createElement(tag);
+  element.className = name;
+  return element;
+}
+```
+
+**Explanation**
+
+- **```createSnakeElement = () => {}```**: this function creates a new _HTML_ element of the type specified in the tag parameter (in this case, &lt;div&gt;).
+
+- **```element.className = name```**: assigns the name class to the element so it can be styled with _CSS_.
+
+- **```return element```**: returns the created element.
 
 ### License
 -----
