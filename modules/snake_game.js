@@ -25,12 +25,23 @@ const htmlRefs = {
 const { score, highScore, gameBoard, gameDescription, scoreContainer } = htmlRefs
 
 export const initGame = () => {
-  gameBoard.innerHTML = '';
+  try {
+    gameBoard.innerHTML = '';
+  
+    drawSnake();
+    drawSnakeFood();
+    drawSnakeBricks();
+    const score = updateScore();
 
-  drawSnake();
-  drawSnakeFood();
-  drawSnakeBricks();
-  updateScore()
+    if(typeof score !== 'number'){
+      console.error(`Error updating score: ${score}`);
+      score = 0;
+    }
+    
+  } catch (error) {
+    log(`Error initializing game: ${error}`);
+    alert('Error initializing game. Please try again later!')
+  }
 }
 
 const drawSnake = () => {
