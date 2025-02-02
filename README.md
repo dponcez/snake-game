@@ -158,17 +158,17 @@ const GRID_SIZE = 20;
 
 **Explanation**
 
-- **```let snakeCoords = [{x: 10, y: 10}]```**: an array called _snakeCoords_ is created, which stores the coordinates of each segment of the snake.
+- **`let snakeCoords = [{x: 10, y: 10}]`**: an array called _snakeCoords_ is created, which stores the coordinates of each segment of the snake.
 
-- **```let direction = 'right'```**: the initial direction of the snake is set to the _'right'_ position.
+- **`let direction = 'right'`**: the initial direction of the snake is set to the _'right'_ position.
 
-- **```let gameStarted = false```**: this variable indicates if the snake game has been started.
+- **`let gameStarted = false`**: this variable indicates if the snake game has been started.
 
-- **```let speedLimit = 200```**: determines the speed of the snake, a lower value means the game will be faster.
+- **`let speedLimit = 200`**: determines the speed of the snake, a lower value means the game will be faster.
 
-- **```let scoreIndex = 0```**: it will be used to store the player's score.
+- **`let scoreIndex = 0`**: it will be used to store the player's score.
 
-- **```let interaval```**: will be used to store the interval identifier, whice controls the duration of the snake's movements and its update.
+- **`let interaval`**: will be used to store the interval identifier, whice controls the duration of the snake's movements and its update.
 
 - **```const GRID_SIZE = 20```**: this variable defines the dimensions of the grid size and also, to be able to limit the movement of the snake.
 
@@ -188,15 +188,15 @@ const htmlRefs = {
 
 **Explanation**
 
-- **```score: selector('[data-score]')```**: it's use to obtain _HTML_ references that have the _data-score_ attribute, which stores the player's score.
+- **`score: selector('[data-score]')`**: it's use to obtain _HTML_ references that have the _data-score_ attribute, which stores the player's score.
 
-- **```highScore: selector('[data-high-score]')```**: it's use to obtain _HTML_ references that have the _data-high-score_ attribute, which stores the player's high score.
+- **`highScore: selector('[data-high-score]')`**: it's use to obtain _HTML_ references that have the _data-high-score_ attribute, which stores the player's high score.
 
-- **```gameBoard: selector('[data-game-board]')```**: it's use to obtain _HTML_ references that have the _data-game-board_ attribute, whice repesents of the board of the game.
+- **`gameBoard: selector('[data-game-board]')`**: it's use to obtain _HTML_ references that have the _data-game-board_ attribute, whice repesents of the board of the game.
 
-- **```gameDescription: selector('[data-game-description]')```**: it's use to get _HTML_ references that have the _data-game-description_ attribute, which represents the game description.
+- **`gameDescription: selector('[data-game-description]')`**: it's use to get _HTML_ references that have the _data-game-description_ attribute, which represents the game description.
 
-- **```scoreContainer: selector('.score--container')```**: is used to get _HTML_ references that has the _.score--container_ class.
+- **`scoreContainer: selector('.score--container')`**: is used to get _HTML_ references that has the _.score--container_ class.
 
 4. **Desctructuring**
 
@@ -233,17 +233,50 @@ export const initGame = () => {
 
 **Explanation**
 
-- **```export const initGame = () => {}```**: is the main function that can be exported and used in another module of the project.
+- **`export const initGame = () => {}`**: is the main function that can be exported and used in another module of the project.
 
-- **```gameBoard.innerHTML = ''```**: delete all _HTML_ content from the element, to prepare the game board.
+- **`gameBoard.innerHTML = ''`**: delete all _HTML_ content from the element, to prepare the game board.
 
-- **```drawSnake()```**: this function draws the snake on the board.
+- **`drawSnake()`**: this function draws the snake on the board.
 
-- **```drawSnakeFood()```**: this function draws the snake's food on the board.
+- **`drawSnakeFood()`**: this function draws the snake's food on the board.
 
-- **```drawSnakeBricks()```**: this function draws obstacles on the board.
+- **`drawSnakeBricks()`**: this function draws obstacles on the board.
 
-- **```updateScore()```**: this function updates the player's score.
+- **`updateScore()`**: this function updates the player's score.
+
+**Update initGame function by adding Error Handling**
+
+```js
+export const initGame = () => {
+  try {
+    gameBoard.innerHTML = '';
+  
+    drawSnake();
+    drawSnakeFood();
+    drawSnakeBricks();
+    const score = updateScore();
+
+    if(typeof score !== 'number'){
+      console.error(`Error updating score: ${score}`);
+      score = 0;
+    }
+    
+  } catch (error) {
+    log(`Error initializing game: ${error}`);
+    alert('Error initializing game. Please try again later!')
+  }
+}
+```
+
+1. **Catch specific errors**: instead of catching the general `Error`, catch specific errors that might occur during game initialization. For example, you could catch `TypeError` if a function is called with the wrong type of argument.
+
+2. **Provide a default value**: if a function fails to execute, provide a default value to prevent the game from crashing. For example, you could set the score to _0_ if `updateScore()` fails.
+
+3. **Log errors**: in addition to catching errors, log them to the console so you can diagnose issues later.
+
+4. **Display an error message**: if an error occurs during game initialization, display an error message to the user to inform them of the issue.
+
 
 **drawSnake**
 
@@ -259,15 +292,15 @@ const drawSnake = () => {
 
 **Explanation**
 
-- **```const drawSnake = () => {}```**: this function was defined to draw the snake on the board.
+- **`const drawSnake = () => {}`**: this function was defined to draw the snake on the board.
 
-- **```snakeCoords.forEach()```**: interate over an array called _snakeCoords_ that contains the coordinates of each segment of the snake.
+- **`snakeCoords.forEach()`**: interate over an array called _snakeCoords_ that contains the coordinates of each segment of the snake.
 
-- **```const SNAKE = createSnakeElement()```**: create a new _HTML_ element (a &lt;div&gt;) with the snake class to represent a segment of the snake.
+- **`const SNAKE = createSnakeElement()`**: create a new _HTML_ element (a &lt;div&gt;) with the snake class to represent a segment of the snake.
 
-- **```snakePosition()```**: place the snake segment in the correct position on the board. The _snakePosition_ function uses the segment coordinates to calculate the position.
+- **`snakePosition()`**: place the snake segment in the correct position on the board. The _snakePosition_ function uses the segment coordinates to calculate the position.
 
-- **```gameBoard.appendChild()```**: adds the snake segment to the _gameBoard_ element.
+- **`gameBoard.appendChild()`**: adds the snake segment to the _gameBoard_ element.
 
 **drawSnakeFood**
 
@@ -283,15 +316,15 @@ const drawSnakeFood = () => {
 
 **Explanation**
 
-- **```const drawSnakeFood = () => {}```**: defines a function to draw the food on the board.
+- **`const drawSnakeFood = () => {}`**: defines a function to draw the food on the board.
 
-- **```if(gameStarted){}```**: checks if the game has started before drawing the food.
+- **`if(gameStarted){}`**: checks if the game has started before drawing the food.
 
-- **```const SNAKE_FOOD = createSnakeElement()```**: creates a new _HTML_ element to represent the food.
+- **`const SNAKE_FOOD = createSnakeElement()`**: creates a new _HTML_ element to represent the food.
 
-- **```snakePosition()```**: place the food in the correct position on the board.
+- **`snakePosition()`**: place the food in the correct position on the board.
 
-- **```gameBoard.appendChild()```**: adds the food to the _gameBoard_ element.
+- **`gameBoard.appendChild()`**: adds the food to the _gameBoard_ element.
 
 **drawSnakeBricks**
 
@@ -305,15 +338,15 @@ const drawSnakeBricks = () => {
 
 **Explanation**
 
-- **```const drawSnakeBricks = () => {}```**: this function will be executed every time we need to draw the bricks in the game.
+- **`const drawSnakeBricks = () => {}`**: this function will be executed every time we need to draw the bricks in the game.
 
-- **```const SNAKE_BRICK = createSnakeElement()```**: this constant variable will store an _HTML_ element of type &lt;div&gt;.
+- **`const SNAKE_BRICK = createSnakeElement()`**: this constant variable will store an _HTML_ element of type &lt;div&gt;.
 
-- **```crateSnakeElement()```**: this function is resposible for creating this element and assigning it the 'brick' class. This class will be uses to apply specific _CSS_ styles to bricks.
+- **`crateSnakeElement()`**: this function is resposible for creating this element and assigning it the 'brick' class. This class will be uses to apply specific _CSS_ styles to bricks.
 
-- **```snakePosition()```**: this line places the brick in a specific position within the game board. This function is resposible for calculating the exact position of the brick based on the coordinates passed to it as an argument.
+- **`snakePosition()`**: this line places the brick in a specific position within the game board. This function is resposible for calculating the exact position of the brick based on the coordinates passed to it as an argument.
 
-- **```gameBoard.appendChild()```**: this line adds the brick we just created to the _HTML_ element that represents the game board. This makes the brick visible on the screen.
+- **`gameBoard.appendChild()`**: this line adds the brick we just created to the _HTML_ element that represents the game board. This makes the brick visible on the screen.
 
 **createSnakeElement**
 
@@ -327,11 +360,122 @@ const createSnakeElement = (tag, name) => {
 
 **Explanation**
 
-- **```createSnakeElement = () => {}```**: this function creates a new _HTML_ element of the type specified in the tag parameter (in this case, &lt;div&gt;).
+- **`createSnakeElement = () => {}`**: this function creates a new _HTML_ element of the type specified in the tag parameter (in this case, &lt;div&gt;).
 
-- **```element.className = name```**: assigns the name class to the element so it can be styled with _CSS_.
+- **`element.className = name`**: assigns the name class to the element so it can be styled with _CSS_.
 
-- **```return element```**: returns the created element.
+- **`return element`**: returns the created element.
+
+**snakePosition**
+
+```js
+const snakePosition = (element, position) => {
+  element.style.gridColumn = position.x;
+  element.style.gridRow = position.y
+}
+```
+
+**Explanation**
+
+- **`const snakePosition = () => {}`**: this function is resposable to place the exact position of the bricks based on the coordinates.
+
+- **`element.style.gridColumn`**: place the brick in the _X-AXIS_ in the middle of the board.
+
+- **`element.style.gridRow`**: place the brick in the _Y-AXIS_ in the middle of the board.
+
+**generateElement**
+
+```js
+let food = generateGameElement(GRID_SIZE);
+let brick = generateGameElement(GRID_SIZE);
+```
+
+**Explanation**
+
+- **`generateGameElement()`**: this function generate random elements to make the _food_ or _brick_ variables, update their current position on the game board.
+
+**snakeMovement**
+
+```js
+const snakeMovement = () => {
+  const HEAD = { ...snakeCoords[0] };
+
+  if(direction === 'left') HEAD.x--;
+  if(direction === 'up') HEAD.y--;
+  if(direction === 'right') HEAD.x++;
+  if(direction === 'down') HEAD.y++;
+
+  snakeCoords.unshift(HEAD);
+
+  if(HEAD.x === food.x && HEAD.y === food.y){
+    food = generateGameElement(GRID_SIZE);
+    brick = generateGameElement(GRID_SIZE);
+    incrementSpeedLimit();
+
+    clearInterval(interval);
+    interval = setInterval(() => {
+      snakeMovement();
+      snakeCollision();
+      snakeBrickCollision();
+      initGame()
+    }, speedLimit)
+  }else{
+    snakeCoords.pop()
+  }
+}
+```
+
+**Explanation**
+
+- **`const snakeMovement = () => {}`**: the snakeMovement function updates the snake's position based on the current direction and handles collisions with food and bricks.
+
+- **`const HEAD = { ...snakeCoords[0] }`**: it calculates the new head position of the snake by updating the HEAD object based on the current direction.
+
+- **`{ ...snakeCoords[0] }`**: it adds the new head position to the beginning of the snakeCoords array.
+
+- **`if(direction === 'left'){}`**: it checks if the _direction_ variable is equal to _'left'_, _'right'_, _'up'_ or _'down'_ strings, to increment or decrement the position of the snake.
+
+- **`if(HEAD.x === food.x && HEAD.y === food.y){}`**: it checks if the snake has consumed the food by comparing the head position with the food's position. If so, it:
+
+- **`food = generateGameElement()`**: regenerates the food and brick elements.
+
+- **`incrementSpeedLimit()`**: increments the speed limit.
+
+- **`clearInterval(interval)`**: resets the interval timer and restarts the game loop.
+
+- **`snakeCoords.pop()`**: if the snake has not consumed the food, it removes the tail position from the snakeCoords array.
+
+**startSnakeGame**
+
+```js
+const startSnakeGame = () => {
+  gameStarted = true;
+  gameDescription.style.display = 'none';
+  scoreContainer.style.display = 'flex';
+
+  clearInterval(interval);
+  interval = setInterval(() => {
+    snakeMovement();
+    snakeCollision();
+    snakeBrickCollision();
+    initGame()
+  }, speedLimit)
+}
+```
+
+**Explanation**
+
+- **`const startSnakeGame = () => {}`**: this function initiate a game loop for a snake game. It sets the game to started state, hides the game description, and shows the score container.
+
+- **`gameStarted`**: is set to true, indicating the game has begun.
+
+- **`gameDescription.style.display = 'none'`**: the _gameDescription_ variable is set to 'hidden' (display: 'none'), to hide the game description when the snake game has started.
+
+- **`scoreContainer.style.display = 'flex'`**: the _scoreContainer_ variable is set to 'flex' (display: 'flex'), to show the game's score when the game stars.
+
+- **`clearInterval(interval)`**: resets the interval timer and restarts the game loop.
+
+- **`interval = setInterval(() => {})`**: this function is called repeatedly at a specified interval (speedLimit).
 
 ### License
 -----
