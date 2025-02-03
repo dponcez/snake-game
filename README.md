@@ -218,7 +218,7 @@ A function is a block of code that can be executed multiple times from different
 
 - _Improve readability_: make code easier to understand and maintain.
 
-1. **initGame**
+**initGame**
 
 ```js
 export const initGame = () => {
