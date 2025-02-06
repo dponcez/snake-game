@@ -213,11 +213,26 @@ const updateScore = () => {
 }
 
 const updateHighScore = () => {
-  const currentScore = snakeCoords.length - 1;
-  
-  if(currentScore > scoreIndex){
-    scoreIndex = currentScore;
-    const STRING = currentScore.toString().padStart(3, '0');
-    highScore.textContent = STRING
+  localStorage.setItem('high-score', JSON.stringify(snakeCoords.length - 1));
+
+  const STORED_SCORE = localStorage.getItem('high-score');
+
+  if(STORED_SCORE){
+    try {
+      const PARSED_SCORE = JSON.parse(STORED_SCORE);
+
+      if(isNaN(PARSED_SCORE)){
+        log(`Invalid score: ${PARSED_SCORE}`);
+        return
+      }
+
+      if(STORED_SCORE > scoreIndex){
+        scoreIndex = PARSED_SCORE;
+        const STRING = PARSED_SCORE.toString().padStart(3, '0');
+        highScore.textContent = STRING;
+      }
+    } catch (error) {
+      log(`Error parsing score: ${error}`);
+    }
   }
 }
