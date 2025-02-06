@@ -477,6 +477,131 @@ const startSnakeGame = () => {
 
 - **`interval = setInterval(() => {})`**: this function is called repeatedly at a specified interval (speedLimit).
 
+**setSnakeDirection**
+
+```js
+const setSnakeDirection = (event) => {
+  const keyboardEvents = [{
+    "left": "ArrowLeft",
+    "up": "ArrowUp",
+    "right": "ArrowRight",
+    "down": "ArrowDown"
+  }];
+
+  const KEY = event.key;
+  const KEY_CODE = event.code;
+
+  if((!gameStarted && KEY_CODE === 'Space')){
+    gameStarted = true;
+    startSnakeGame()
+  }else{
+    keyboardEvents.forEach(arrow => {
+      const { left, up, right, down } = arrow;
+
+      if(KEY === left) direction = 'left';
+      if(KEY === up) direction = 'up';
+      if(KEY === right) direction = 'right';
+      if(KEY === down) direction = 'down'
+    })
+  }
+}
+
+const handleKeyPress = debounce(setSnakeDirection, 300)
+eventHandler(document, 'keydown', handleKeyPress)
+```
+
+**Explanation**
+
+- **`setSnakeDirection = (event) => {}`**: this function is the core of the direction handling. It takes a keyboard event as input.
+
+- **`keyboardEvents`**: this array (currently with only one element) seems intended to map key names to arrow key codes. Direct comparison with event.code is simpler and more efficient.
+
+- **`KEY`** and **`KEY_CODE`**: these variables store the pressed key's name (e.g., "ArrowLeft") and code (e.g., "ArrowLeft") _event.code_ is generally preferred over event.key for handling key presses in games because it's more consistent across different keyboard layouts.
+
+- **`gameStarted`**: the _if_ condition checks if the game has started *(!gameStarted)* and if the pressed key is _Space_. If so, it sets _gameStarted_ to true and calls _startSnakeGame()_. This is the mechanism to initiate the game.
+
+- Direction Setting: the _else_ block iterates through the _keyboardEvents_ array. Inside the loop, it checks if the pressed key matches any of the arrow key names. If a match is found, it updates the direction variable.
+
+- **`handleKeyPress`**: this variable stores the debounced version of _setSnakeDirection_ function. Debouncing is used to prevent the snake from changing direction too rapidly when a key is held down. The debounce function likely uses a timer to limit the rate at which _setSnakeDirection_ is called. A 300ms delay is used.
+
+- **`eventHandler`**: this function is a custom function that attaches the _handleKeyPress_ function as a listener for the keydown event on the document.
+
+**incrementSpeedLimit**
+
+```js
+const incrementSpeedLimit = () => {
+  if(speedLimit > 150) speedLimit -= 5;
+  if(speedLimit > 100) speedLimit -= 3;
+  if(speedLimit > 50) speedLimit -= 2;
+}
+```
+
+**Explanation**
+
+The **`incrementSpeedLimit`** function uses a series of _if_ statements to decrement speedLimit by different amounts depending on its current value.
+
+**snakeCollision**
+
+```js
+const snakeCollision = () => {
+  const HEAD = snakeCoords[0];
+  
+  const X_AXIS_COLLISION = (HEAD.x < 1 || HEAD.x > GRID_SIZE);
+  const Y_AXIS_COLLISION = (HEAD.y < 1 || HEAD.y > GRID_SIZE);
+
+  if(X_AXIS_COLLISION || Y_AXIS_COLLISION){
+    resetSnakeGame()
+  }
+
+  for(let i = 1; i < snakeCoords.length; i++){
+    const X_COORD = HEAD.x === snakeCoords[i].x;
+    const Y_COORD = HEAD.y === snakeCoords[i].y;
+
+    if(X_COORD && Y_COORD){
+      resetSnakeGame()
+    }
+  }
+}
+```
+
+**Explanation**
+
+- **`snakeCollision`**: this function checks for two types of collisions in a Snake game: collisions with the game board boundaries and collisions with the snake's own body.
+
+- **`HEAD`**: gets the coordinates of the snake's head from the snakeCoords array.
+
+- **`X_AXIS_COLLISION`** and **`Y_AXIS_COLLISION`**: these boolean variables check if the head has gone beyond the boundaries of the game grid. It assumes the grid coordinates range from 1 to _GRID_SIZE_ inclusive.
+
+- Boundary Collision: the _if_ statement checks if either _X_AXIS_COLLISION_ or _Y_AXIS_COLLISION_ is true. If so, it calls _resetSnakeGame()_.
+
+- Self-Collision: the _for loop_ iterates through the snake's body (starting from the second element, index 1, as the head is at index 0).
+
+- **`X_COORD`** and **`Y_COORD`**: these boolean variables check if the head's x and y coordinates match the coordinates of the current body segment.
+
+- Self-Collision Check: the _if_ statement checks if both _X_COORD_ and _Y_COORD_ are true, meaning the head has collided with a body segment. If so, it calls _resetSnakeGame()_.
+
+**snakeBrickCollision**
+
+```js
+const snakeBrickCollision = () => {
+  const HEAD = { ...snakeCoords[0] };
+
+  if(HEAD.x === brick.x && HEAD.y === brick.y){
+    resetSnakeGame()
+  }
+}
+```
+
+**Explanation**
+
+- **`snakeBrickCollision`**: this function checks if the snake's head has collided with a brick (obstacles) in your game.
+
+- **`HEAD`**: creates a shallow copy of the snake's head coordinates. This is important because if you modified _snakeCoords[0]_ directly, it would affect the snake's actual position.
+
+- Collision Check: checks if the head's _x_ and _y_ coordinates are equal to the brick's x and y coordinates.
+
+- Game Over: if a collision occurs, it calls _resetSnakeGame()_.
+
 ### License
 -----
 
