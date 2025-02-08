@@ -512,7 +512,7 @@ eventHandler(document, 'keydown', handleKeyPress)
 
 **Explanation**
 
-- **`setSnakeDirection = (event) => {}`**: this function is the core of the direction handling. It takes a keyboard event as input.
+- **`const setSnakeDirection = (event) => {}`**: this function is the core of the direction handling. It takes a keyboard event as input.
 
 - **`keyboardEvents`**: this array (currently with only one element) seems intended to map key names to arrow key codes. Direct comparison with event.code is simpler and more efficient.
 
@@ -538,7 +538,7 @@ const incrementSpeedLimit = () => {
 
 **Explanation**
 
-The **`incrementSpeedLimit`** function uses a series of _if_ statements to decrement speedLimit by different amounts depending on its current value.
+The **`const incrementSpeedLimit = () => {}`** function uses a series of _if_ statements to decrement speedLimit by different amounts depending on its current value.
 
 **snakeCollision**
 
@@ -566,7 +566,7 @@ const snakeCollision = () => {
 
 **Explanation**
 
-- **`snakeCollision`**: this function checks for two types of collisions in a Snake game: collisions with the game board boundaries and collisions with the snake's own body.
+- **`const snakeCollision = () => {}`**: this function checks for two types of collisions in a Snake game: collisions with the game board boundaries and collisions with the snake's own body.
 
 - **`HEAD`**: gets the coordinates of the snake's head from the snakeCoords array.
 
@@ -594,13 +594,119 @@ const snakeBrickCollision = () => {
 
 **Explanation**
 
-- **`snakeBrickCollision`**: this function checks if the snake's head has collided with a brick (obstacles) in your game.
+- **`const snakeBrickCollision = () => {}`**: this function checks if the snake's head has collided with a brick (obstacles) in your game.
 
 - **`HEAD`**: creates a shallow copy of the snake's head coordinates. This is important because if you modified _snakeCoords[0]_ directly, it would affect the snake's actual position.
 
 - Collision Check: checks if the head's _x_ and _y_ coordinates are equal to the brick's x and y coordinates.
 
 - Game Over: if a collision occurs, it calls _resetSnakeGame()_.
+
+**resetSnakeGame**
+
+```js
+const resetSnakeGame = () => {
+  updateHighScore();
+  stopGame();
+
+  gameDescription.style.display = 'flex';
+  setTimeout(() => {
+    scoreContainer.style.visibility = 'hidden';
+  }, 5000);
+
+  snakeCoords = [{ x: 10, y: 10 }];
+  food = generateGameElement(GRID_SIZE);
+  direction = 'right';
+  speedLimit = 200;
+
+  updateScore()
+}
+```
+
+**Explaation**
+
+- **`const resetSnakeGame = () => {}`**: this function handles resetting the game state when the player collides with a wall, the snake's own body, or a brick.
+
+- **`updateHighScore()`**: updates the high score.
+
+- **`stopGame()`**: stops the game loop or timer.
+
+- **`gameDescription.style.display = 'flex'`**: shows the game description (likely a "Game Over" message or instructions).
+
+- **`setTimeout(...)`**: hides the score container after a 5-second delay. This might be to give the player a chance to see their final score before it's hidden.
+
+- Reset Snake: resets the snake's coordinates to the initial position _[{ x: 10, y: 10 }]_.
+
+- Reset Food: generates a new food item using _generateGameElement(GRID_SIZE)_.
+
+- Reset Direction: sets the initial direction to _'right'_.
+
+- Reset Speed: sets the speed limit back to the initial value of 200.
+
+- **`updateScore()`**: updates the displayed score, likely resetting it to zero.
+
+**resetGame**
+
+```js
+const stopGame = () => {
+  gameStarted = false;
+  clearInterval(interval);
+}
+```
+
+**Explanation**
+
+- **`const stopGame = () => {}`**: this function is a simple but crucial part of your game's logic. It's designed to halt the game loop and set the _gameStarted_ flag to false.
+
+- **`gameStarted = false`**:  sets the gameStarted flag to false. This flag is likely used in your game loop or other game logic to determine whether the game is currently running. Setting it to false effectively pauses or stops the game.
+
+- **`clearInterval(interval)`**: clears the interval associated with the game loop. The _interval_ variable returns the _setInterval_ when the game loop was started. _clearInterval_ stops the repeated execution of the game loop function.
+
+**updateScore**
+
+```js
+const updateScore = () => {
+  const currentScore = snakeCoords.length - 1;
+  const STRING = currentScore.toString().padStart(3, '0');
+  score.textContent = STRING
+}
+```
+
+**Explanation**
+
+- **`const updateScore = () => {}`**: this function calculates and updates the player's _score_ display in your Snake game.
+
+- **`currentScore`**: calculates the current score by subtracting 1 from the length of the snakeCoords array. This assumes that the snake's length is one greater than the actual score (because the head is also part of the snakeCoords array).
+
+- **`STRING`**: converts the _currentScore_ to a string and pads it with leading zeros to ensure it's always three digits long. This is done using _padStart(3, '0')_.
+
+- **`score.textContent = STRING`**: updates the _textContent_ of the score element (an HTML element where the score is displayed) with the formatted score string.
+
+**updateHighScore**
+
+```js
+const updateHighScore = () => {
+  const currentScore = snakeCoords.length - 1;
+  
+  if(currentScore > scoreIndex){
+    scoreIndex = currentScore;
+    const STRING = currentScore.toString().padStart(3, '0');
+    highScore.textContent = STRING
+  }
+}
+```
+
+**Explanation**
+
+- **`const updateHighScore = () => {}`**: this function updates the displayed high score if the current score surpasses it.
+
+- **`currentScore`**: calculates the current score (snake's length minus 1).
+
+- High Score Check: checks if _currentScore_ is greater than _scoreIndex_ (which stores the current high score).
+
+- Update High Score: if the current score is higher, it updates _scoreIndex_ with the new high score and formats the high score as a 3-digit padded string.
+
+- Update Display: updates the highScore element's textContent with the formatted high score.
 
 ### License
 -----
