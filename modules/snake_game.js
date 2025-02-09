@@ -3,6 +3,7 @@ import { createElement } from "./custom_functions.js";
 import { eventHandler } from "./custom_functions.js";
 import { generateGameElement } from "./custom_functions.js";
 import { debounce } from "../utils/debounce.js";
+import { log } from "./custom_functions.js";
 
 
 let snakeCoords = [{x: 10, y: 10}];
