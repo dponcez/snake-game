@@ -41,16 +41,54 @@
 }
 
 body {
-  background-image: linear-gradient(45deg,
-  hsl(calc(var(--hue) * 2),
-    calc(var(--saturation) * 1.35),
-    calc(var(--lightness) * .90)),
-  hsl(var(--hue), var(--saturation), var(--lightness)));
+  background: var(--light-gray);
+  &.dark { background: hsl(0, 100%, 0%) }
 }
 
 .container {
   width: var(--sz);
   height: var(--svh);
+  .toggle--container {
+    top: 1ch;
+    right: 5ch;
+    .toggle {
+      --toggle-sz: 3ch;
+      --dark-theme: var(--dark, hsl(0, 25%, 2%));
+      width: var(--sz);
+      min-width: calc(var(--toggle-sz) * 2.125);
+      height: var(--toggle-sz);
+      position: relative;
+      border-radius: 5ch;
+      border: none;
+      background: var(--dark-theme);
+      box-shadow: .025ch .025ch .75ch 0 rgba(255,255,255,.85) inset;
+      cursor: pointer;
+      &.active {
+        --dark: hsl(10, 60%, 98%);
+        background: var(--dark);
+        box-shadow: .025ch .025ch .75ch 0 rgba(0,0,0,.85) inset
+      }
+      &::before {
+        content: '';
+        width: calc(var(--toggle-sz) * .725);
+        height: calc(var(--toggle-sz) * .725);
+        background: var(--light-gray);
+        position: absolute;
+        top: 50%;
+        left: 25%;
+        transform: translate(-50%, -50%);
+        border-radius: var(--sz);
+        transition: 200ms right cubic-bezier(0.075, 0.82, 0.165, 1);
+
+      }
+      &.active::before {
+        --dark: hsl(0, 25%, 2%);
+        left: 76%;
+        background: var(--dark);
+        transition: 200ms left cubic-bezier(0.165, 0.84, 0.44, 1)
+      }
+    }
+  }
   .game--container {
     position: relative;
     .score--container {
@@ -63,11 +101,15 @@ body {
         font: 700 calc(var(--fnt-sz) / 3) var(--fnt-play);
         text-transform: capitalize;
         &:has(span) { color: var(--dark-color); }
+        &:has(span.active) { color: hsl(10, 60%, 98%) }
         & :where(span) {
           margin-inline-start: .25rem;
           font-weight: 500; 
         }
-        .high--score { color: var(--blue-color); }
+        .high--score { 
+          color: var(--blue-color);
+          &.active{ color: var(--light-gray) }
+        }
       }
     }
     .game--board {
@@ -75,7 +117,7 @@ body {
       grid-template-columns: repeat(20, var(--pd));
       grid-template-rows: repeat(20, var(--pd));
       position: relative;
-      background-image: linear-gradient(
+      background: linear-gradient(
         0deg,
         hsl(
           calc(var(--hue) * 3.2), 
@@ -98,13 +140,14 @@ body {
         top: -.7rem;
         border-radius: .2rem;
       }
+      &.active::before { border: .1lh solid var(--light-gray) }
       & :where(.food, .brick) { border: .15lh var(--border) solid }
       & :where(.snake, .brick) {
         width: var(--pd);
         height: var(--pd);
       }
       .snake {
-        background-image: linear-gradient(
+        background: linear-gradient(
           45deg,
           var(--dark-green),
           var(--middle-green)
@@ -112,10 +155,10 @@ body {
         border: .15lh solid var(--forest-green)
       }
       .food {
-        background-color: var(--red-color);
+        background: var(--red-color);
         border-radius: 50%;
       }
-      .brick { background-color: var(--gray-brick-color); }
+      .brick { background: var(--gray-brick-color); }
     }
     .description--container {
       justify-content: center;
