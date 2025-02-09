@@ -18,10 +18,13 @@
 </head>
 <body>
   <div class='container grid'>
+    <div class="toggle--container absolute">
+      <button class="toggle" data-dark-toggle></button>
+    </div>
     <div class="game--container grid">
       <div class="score--container flex">
-        <p class="info flex">score: <span class="score" data-score>000</span></p>
-        <p class="info flex">high score: <span class="high--score" data-high-score>000</span></p>
+        <p class="info flex">score: <span class="score inactive" data-score>000</span></p>
+        <p class="info flex">high score: <span class="high--score inactive" data-high-score>000</span></p>
       </div>
       <div class="game--board grid" data-game-board></div>
       <div class="description--container absolute flex" data-game-description>
