@@ -123,102 +123,150 @@ const startSnakeGame = () => {
 }
 
 const setSnakeDirection = (event) => {
-  const keyboardEvents = [{
-    "left": "ArrowLeft",
-    "up": "ArrowUp",
-    "right": "ArrowRight",
-    "down": "ArrowDown"
-  }];
+  const keyboardEvents = [
+    {
+      left: "ArrowLeft",
+      up: "ArrowUp",
+      right: "ArrowRight",
+      down: "ArrowDown",
+    },
+  ];
 
   const KEY = event.key;
   const KEY_CODE = event.code;
 
-  if((!gameStarted && KEY_CODE === 'Space')){
+  if (!gameStarted && KEY_CODE === "Space") {
     gameStarted = true;
-    startSnakeGame()
-  }else{
-    keyboardEvents.forEach(arrow => {
+    startSnakeGame();
+    return;
+  } else {
+    keyboardEvents.forEach((arrow) => {
       const { left, up, right, down } = arrow;
 
-      if(KEY === left) direction = 'left';
-      if(KEY === up) direction = 'up';
-      if(KEY === right) direction = 'right';
-      if(KEY === down) direction = 'down'
-    })
+      if (KEY === left) direction = "left";
+      if (KEY === up) direction = "up";
+      if (KEY === right) direction = "right";
+      if (KEY === down) direction = "down";
+    });
   }
-}
+};
 
-const handleKeyPress = debounce(setSnakeDirection, 300)
-eventHandler(document, 'keydown', handleKeyPress)
+const handleKeyPress = debounce(setSnakeDirection, 100);
+eventHandler(document, "keydown", handleKeyPress);
 
 const incrementSpeedLimit = () => {
-  if(speedLimit > 150) speedLimit -= 5;
-  if(speedLimit > 100) speedLimit -= 3;
-  if(speedLimit > 50) speedLimit -= 2;
-}
+  const MIN_SPEED_LIMIT = 20;
+
+  const decrements = [
+    { threshold: 150, decrement: 5 },
+    { threshold: 100, decrement: 3 },
+    { threshold: 50, decrement: 1 },
+  ];
+
+  for (const { threshold, decrement } of decrements) {
+    if (speedLimit > threshold) {
+      speedLimit = Math.max(MIN_SPEED_LIMIT, speedLimit - decrement);
+      return;
+    }
+  }
+
+  speedLimit = Math.max(MIN_SPEED_LIMIT, speedLimit - 1);
+};
 
 const snakeCollision = () => {
   const HEAD = snakeCoords[0];
-  
-  const X_AXIS_COLLISION = (HEAD.x < 1 || HEAD.x > GRID_SIZE);
-  const Y_AXIS_COLLISION = (HEAD.y < 1 || HEAD.y > GRID_SIZE);
 
-  if(X_AXIS_COLLISION || Y_AXIS_COLLISION){
-    resetSnakeGame()
+  const SNAKE_HIT_WALL =
+    HEAD.x < 1 || HEAD.x > GRID_SIZE || HEAD.y < 1 || HEAD.y > GRID_SIZE;
+
+  if (SNAKE_HIT_WALL) {
+    resetSnakeGame();
+    return;
   }
 
-  for(let i = 1; i < snakeCoords.length; i++){
-    const X_COORD = HEAD.x === snakeCoords[i].x;
-    const Y_COORD = HEAD.y === snakeCoords[i].y;
+  for (let i = 1; i < snakeCoords.length; i++) {
+    const SNAKE_COLLISION =
+      HEAD.x === snakeCoords[i].x && HEAD.y === snakeCoords[i].y;
 
-    if(X_COORD && Y_COORD){
-      resetSnakeGame()
+    if (SNAKE_COLLISION) {
+      resetSnakeGame();
+      return;
     }
   }
-}
+};
 
 const snakeBrickCollision = () => {
   const HEAD = { ...snakeCoords[0] };
+  const SNAKE_HIT_BRICK = HEAD.x === brick.x && HEAD.y === brick.y;
 
-  if(HEAD.x === brick.x && HEAD.y === brick.y){
-    resetSnakeGame()
+  if (SNAKE_HIT_BRICK) {
+    resetSnakeGame();
+    return;
   }
-}
+};
 
 const resetSnakeGame = () => {
   updateHighScore();
   stopGame();
 
-  gameDescription.style.display = 'flex';
-  setTimeout(() => {
-    scoreContainer.style.visibility = 'hidden';
-  }, 5000);
+  gameDescription.style.display = "flex";
 
-  snakeCoords = [{ x: 10, y: 10 }];
+  snakeCoords = [
+    { 
+      x: Math.floor(GRID_SIZE / 2), 
+      y: Math.floor(GRID_SIZE / 2) 
+    },
+  ];
   food = generateGameElement(GRID_SIZE);
-  direction = 'right';
+  direction = "right";
   speedLimit = 200;
+  score.textContent = 0;
 
-  updateScore()
-}
+  updateScore();
+  gameStarted = false;
+};
 
 const stopGame = () => {
   gameStarted = false;
   clearInterval(interval);
-}
+  interval = null;
+};
 
 const updateScore = () => {
   const currentScore = snakeCoords.length - 1;
-  const STRING = currentScore.toString().padStart(3, '0');
-  score.textContent = STRING
-}
+  const FORMATTED_SCORE = String(currentScore).padStart(3, "0");
+  score.textContent = FORMATTED_SCORE;
+};
 
 const updateHighScore = () => {
   const currentScore = snakeCoords.length - 1;
 
   if (currentScore > scoreIndex) {
     scoreIndex = currentScore;
-    const STRING = currentScore.toString().padStart(3, "0");
-    highScore.textContent = STRING;
+    const FORMATTED_HIGH_SCORE = String(currentScore).padStart(3, "0");
+    highScore.textContent = FORMATTED_HIGH_SCORE;
+
+    // save high score to local storage
+    localStorage.setItem("high-score", scoreIndex);
   }
 };
+
+// When the game loads, retrieve the high score from local storage:
+window.addEventListener("DOMContentLoaded", () => {
+  const STORED_HIGH_SCORE = localStorage.getItem("high-score");
+
+  if (STORED_HIGH_SCORE) {
+    try {
+      const PARSED_SCORE = JSON.parse(STORED_HIGH_SCORE);
+      if (isNaN(PARSED_SCORE)) {
+        log(`Invalid score: ${PARSED_SCORE}`);
+        return;
+      }
+
+      scoreIndex = parseInt(STORED_HIGH_SCORE, 10);
+      highScore.textContent = String(scoreIndex).padStart(3, "0");
+    } catch (error) {
+      log(`Error parsing score: ${error}`);
+    }
+  }
+});
