@@ -245,39 +245,6 @@ export const initGame = () => {
 
 - **`updateScore()`**: this function updates the player's score.
 
-**Update initGame function by adding Error Handling**
-
-```js
-export const initGame = () => {
-  try {
-    gameBoard.innerHTML = '';
-  
-    drawSnake();
-    drawSnakeFood();
-    drawSnakeBricks();
-    const score = updateScore();
-
-    if(typeof score !== 'number'){
-      console.error(`Error updating score: ${score}`);
-      score = 0;
-    }
-    
-  } catch (error) {
-    log(`Error initializing game: ${error}`);
-    alert('Error initializing game. Please try again later!')
-  }
-}
-```
-
-1. **Catch specific errors**: instead of catching the general `Error`, catch specific errors that might occur during game initialization. For example, you could catch `TypeError` if a function is called with the wrong type of argument.
-
-2. **Provide a default value**: if a function fails to execute, provide a default value to prevent the game from crashing. For example, you could set the score to _0_ if `updateScore()` fails.
-
-3. **Log errors**: in addition to catching errors, log them to the console so you can diagnose issues later.
-
-4. **Display an error message**: if an error occurs during game initialization, display an error message to the user to inform them of the issue.
-
-
 **drawSnake**
 
 ```js
@@ -520,7 +487,7 @@ eventHandler(document, 'keydown', handleKeyPress)
 
 - **`gameStarted`**: the _if_ condition checks if the game has started *(!gameStarted)* and if the pressed key is _Space_. If so, it sets _gameStarted_ to true and calls _startSnakeGame()_. This is the mechanism to initiate the game.
 
-- Direction Setting: the _else_ block iterates through the _keyboardEvents_ array. Inside the loop, it checks if the pressed key matches any of the arrow key names. If a match is found, it updates the direction variable.
+- **Direction setting**: the _else_ block iterates through the _keyboardEvents_ array. Inside the loop, it checks if the pressed key matches any of the arrow key names. If a match is found, it updates the direction variable.
 
 - **`handleKeyPress`**: this variable stores the debounced version of _setSnakeDirection_ function. Debouncing is used to prevent the snake from changing direction too rapidly when a key is held down. The debounce function likely uses a timer to limit the rate at which _setSnakeDirection_ is called. A 300ms delay is used.
 
@@ -572,13 +539,13 @@ const snakeCollision = () => {
 
 - **`X_AXIS_COLLISION`** and **`Y_AXIS_COLLISION`**: these boolean variables check if the head has gone beyond the boundaries of the game grid. It assumes the grid coordinates range from 1 to _GRID_SIZE_ inclusive.
 
-- Boundary Collision: the _if_ statement checks if either _X_AXIS_COLLISION_ or _Y_AXIS_COLLISION_ is true. If so, it calls _resetSnakeGame()_.
+- **Boundary collision**: the _if_ statement checks if either _X_AXIS_COLLISION_ or _Y_AXIS_COLLISION_ is true. If so, it calls _resetSnakeGame()_.
 
-- Self-Collision: the _for loop_ iterates through the snake's body (starting from the second element, index 1, as the head is at index 0).
+- **Self-collision**: the _for loop_ iterates through the snake's body (starting from the second element, index 1, as the head is at index 0).
 
 - **`X_COORD`** and **`Y_COORD`**: these boolean variables check if the head's x and y coordinates match the coordinates of the current body segment.
 
-- Self-Collision Check: the _if_ statement checks if both _X_COORD_ and _Y_COORD_ are true, meaning the head has collided with a body segment. If so, it calls _resetSnakeGame()_.
+- **Self-collision check**: the _if_ statement checks if both _X_COORD_ and _Y_COORD_ are true, meaning the head has collided with a body segment. If so, it calls _resetSnakeGame()_.
 
 **snakeBrickCollision**
 
@@ -598,9 +565,9 @@ const snakeBrickCollision = () => {
 
 - **`HEAD`**: creates a shallow copy of the snake's head coordinates. This is important because if you modified _snakeCoords[0]_ directly, it would affect the snake's actual position.
 
-- Collision Check: checks if the head's _x_ and _y_ coordinates are equal to the brick's x and y coordinates.
+- **Collision check**: checks if the head's _x_ and _y_ coordinates are equal to the brick's x and y coordinates.
 
-- Game Over: if a collision occurs, it calls _resetSnakeGame()_.
+- **Game over**: if a collision occurs, it calls _resetSnakeGame()_.
 
 **resetSnakeGame**
 
@@ -635,13 +602,13 @@ const resetSnakeGame = () => {
 
 - **`setTimeout(...)`**: hides the score container after a 5-second delay. This might be to give the player a chance to see their final score before it's hidden.
 
-- Reset Snake: resets the snake's coordinates to the initial position _[{ x: 10, y: 10 }]_.
+- **Reset snake**: resets the snake's coordinates to the initial position _[{ x: 10, y: 10 }]_.
 
-- Reset Food: generates a new food item using _generateGameElement(GRID_SIZE)_.
+- **Reset food**: generates a new food item using _generateGameElement(GRID_SIZE)_.
 
-- Reset Direction: sets the initial direction to _'right'_.
+- **Reset direction**: sets the initial direction to _'right'_.
 
-- Reset Speed: sets the speed limit back to the initial value of 200.
+- **Reset speed**: sets the speed limit back to the initial value of 200.
 
 - **`updateScore()`**: updates the displayed score, likely resetting it to zero.
 
@@ -702,11 +669,243 @@ const updateHighScore = () => {
 
 - **`currentScore`**: calculates the current score (snake's length minus 1).
 
-- High Score Check: checks if _currentScore_ is greater than _scoreIndex_ (which stores the current high score).
+- **High score check**: checks if _currentScore_ is greater than _scoreIndex_ (which stores the current high score).
 
-- Update High Score: if the current score is higher, it updates _scoreIndex_ with the new high score and formats the high score as a 3-digit padded string.
+- **Update high score**: if the current score is higher, it updates _scoreIndex_ with the new high score and formats the high score as a 3-digit padded string.
 
-- Update Display: updates the highScore element's textContent with the formatted high score.
+- **Update display**: updates the highScore element's textContent with the formatted high score.
+
+### Updated Functions
+-----
+
+**initGame**
+
+```js
+export const initGame = () => {
+  try {
+    gameBoard.innerHTML = '';
+  
+    drawSnake();
+    drawSnakeFood();
+    drawSnakeBricks();
+    const score = updateScore();
+
+    if(typeof score !== 'number'){
+      console.error(`Error updating score: ${score}`);
+      score = 0;
+    }
+    
+  } catch (error) {
+    log(`Error initializing game: ${error}`);
+    alert('Error initializing game. Please try again later!')
+  }
+}
+```
+
+**Explanation of changes**
+
+1. **Catch specific errors**: instead of catching the general `Error`, catch specific errors that might occur during game initialization. For example, you could catch `TypeError` if a function is called with the wrong type of argument.
+
+2. **Provide a default value**: if a function fails to execute, provide a default value to prevent the game from crashing. For example, you could set the score to _0_ if `updateScore()` fails.
+
+3. **Log errors**: in addition to catching errors, log them to the console so you can diagnose issues later.
+
+4. **Display an error message**: if an error occurs during game initialization, display an error message to the user to inform them of the issue.
+
+**incrementSpeedLimit**
+
+```js
+const incrementSpeedLimit = () => {
+  const MIN_SPEED_LIMIT = 20;
+
+  const decrements = [
+    { threshold: 150, decrement: 5 },
+    { threshold: 100, decrement: 3 },
+    { threshold: 50, decrement: 1 },
+  ];
+
+  for (const { threshold, decrement } of decrements) {
+    if (speedLimit > threshold) {
+      speedLimit = Math.max(MIN_SPEED_LIMIT, speedLimit - decrement);
+      return;
+    }
+  }
+
+  speedLimit = Math.max(MIN_SPEED_LIMIT, speedLimit - 1);
+};
+```
+
+**Explanation of changes**
+
+- **`Math.max()` for Minimum Bound**: the _Math.max()_ function ensures that _speedLimit_ never goes below _MIN_SPEED_LIMIT_. You should define an appropriate minimum speed limit for your game.
+
+- **Concise version with lookup table**: this version uses a lookup table to store the thresholds and decrements, making the code more compact and easier to extend. Then, the return statement ensures that only one decrement is applied.
+
+- **Default decrement**: a final clause (or a default decrement after the loop in the concise version) is added to handle cases where speedLimit is below 50 or when none condition is met. This provides a smaller, more gradual speed increase at lower speeds.
+
+**snakeCollision**
+
+```js
+const snakeCollision = () => {
+  const HEAD = snakeCoords[0];
+
+  const SNAKE_HIT_WALL =
+    HEAD.x < 1 || HEAD.x > GRID_SIZE || HEAD.y < 1 || HEAD.y > GRID_SIZE;
+
+  if (SNAKE_HIT_WALL) {
+    resetSnakeGame();
+    return;
+  }
+
+  for (let i = 1; i < snakeCoords.length; i++) {
+    const SNAKE_COLLISION =
+      HEAD.x === snakeCoords[i].x && HEAD.y === snakeCoords[i].y;
+
+    if (SNAKE_COLLISION) {
+      resetSnakeGame();
+      return;
+    }
+  }
+};
+```
+
+**Explanation of changes**
+
+- **Combined boundary check**: the boundary checks are combined into a single _SNAKE_HIT_WALL_ variable using the logical OR operator (||). This makes the code more concise.
+
+- **Descriptive variable names**: change the _X_AXIS_COLLISION_ and _Y_AXIS_COLLISION_ combined variables to a more descriptive variable such as (SNAKE_HIT_WALL).
+
+- **Early exit**: The return statements after calling _resetSnakeGame()_ are crucial. They prevent the code from unnecessarily continuing to check for collisions after a collision has already been detected. This improves efficiency, especially in the self-collision check.
+
+- **Efficient self-collision check**: change the combined variables _X_COORD_ and _Y_COORD_ to a more descriptive variable such as (SNAKE_COLLISION), to store the conditions in said variable and thus optimize and improve the reading of the code.
+
+**snakeBrickCollision**
+
+```js
+const snakeBrickCollision = () => {
+  const HEAD = { ...snakeCoords[0] };
+  const SNAKE_HIT_BRICK = HEAD.x === brick.x && HEAD.y === brick.y;
+
+  if (SNAKE_HIT_BRICK) {
+    resetSnakeGame();
+    return;
+  }
+}
+```
+
+**Explanation of changes**
+
+- **`const SNAKE_HIT_BRICK = ...`**: this variable stores the condition, using the operator (&&), to determine if the snake hits the bricks to stop the game.
+
+- **`return`**: after the _resetSnakeGame_ function you need to implement the _return_ method to exit the collision with a brick.
+
+**resetGame**
+
+```js
+const resetSnakeGame = () => {
+  updateHighScore();
+  stopGame();
+
+  gameDescription.style.display = "flex";
+
+  snakeCoords = [
+    { 
+      x: Math.floor(GRID_SIZE / 2), 
+      y: Math.floor(GRID_SIZE / 2) 
+    },
+  ];
+  food = generateGameElement(GRID_SIZE);
+  direction = "right";
+  speedLimit = 200;
+  score.textContent = 0;
+
+  updateScore();
+  gameStarted = false;
+};
+```
+
+**Explanation of changes**
+
+- **Centering the snake**: instead of hardcoding the initial snake position to _[{ x: 10, y: 10 }]_, it's better to center the snake on the grid using _Math.floor(GRID_SIZE / 2)_. This makes the game more adaptable to different grid sizes.
+
+- **Remove `setTimeout()`**: to fix an issue with the display of the _scoreContainer_ variable on the screen, when the _resetSnakeGame_ function is called again.
+
+- **Explicitly resetting the score**: added `score.textContent = 0`; to ensure the score is explicitly reset to zero. It's good practice to manage the score variable directly in resetSnakeGame.
+
+- **Immediate score update**: the _updateScore()_ call is moved after `score.textContent = 0` to ensure the displayed score is updated correctly immediately.
+
+- **Reset gameStarted flag**: added `gameStarted = false`; to reset the game state. This is important so the player has to press the start key again.
+
+**updateScore**
+
+```js
+const updateScore = () => {
+  const currentScore = snakeCoords.length - 1;
+  const FORMATTED_SCORE = String(currentScore).padStart(3, "0");
+  score.textContent = FORMATTED_SCORE;
+};
+```
+
+**Explanation of changes**
+
+- **More descriptive variable name**: renamed *STRING* to FORMATTED_SCORE to make the code more readable. This changes are crucial for maintainability.
+
+- **`String(currentScore).padStart(3, '0')`**: convert *currentScore* variable to a string and pads it with leading zeros to ensure it's always three digits long.
+
+- **`score.textContent = FORMATTED_SCORE`**: updates the _textContent_ of the score element with the formatted score string.
+
+**updateHighScore**
+
+```js
+const updateHighScore = () => {
+  const currentScore = snakeCoords.length - 1;
+
+  if (currentScore > scoreIndex) {
+    scoreIndex = currentScore;
+    const FORMATTED_HIGH_SCORE = String(currentScore).padStart(3, "0");
+    highScore.textContent = FORMATTED_HIGH_SCORE;
+
+    // save high score to local storage
+    localStorage.setItem("high-score", scoreIndex);
+  }
+};
+
+// When the game loads, retrieve the high score from local storage:
+window.addEventListener("DOMContentLoaded", () => {
+  const STORED_HIGH_SCORE = localStorage.getItem("high-score");
+
+  if (STORED_HIGH_SCORE) {
+    try {
+      const PARSED_SCORE = JSON.parse(STORED_HIGH_SCORE);
+      if (isNaN(PARSED_SCORE)) {
+        log(`Invalid score: ${PARSED_SCORE}`);
+        return;
+      }
+
+      scoreIndex = parseInt(STORED_HIGH_SCORE, 10);
+      highScore.textContent = String(scoreIndex).padStart(3, "0");
+    } catch (error) {
+      log(`Error parsing score: ${error}`);
+    }
+  }
+});
+```
+
+**Explanation of changes**
+
+- **Descriptive variable name**: renamed *STRING* to *FORMATTED_HIGH_SCORE*.
+
+- **Local storage persistence**: the most important addition is saving the high score to local storage using *`localStorage.setItem('high-score', scoreIndex)`*. This ensures that the high score is preserved between game sessions.
+
+- **Get storage persistence**: you can get the high score to local storage using *`localStorage.getItem('high-score')`*.
+
+- **Parsing stored high score**: when retrieving the high score from local storage, it's essential to parse it as an integer using *`parseInt(STORED_HIGH_SCORE, 10)`*. Local storage stores values as strings, so you need to convert it back to a number.
+
+- **`DOMContentLoaded` event**: the code to retrieve the high score from local storage is placed within a *DOMContentLoaded* event listener. This ensures that the code runs after the *HTML* document has fully loaded, so the highScore element is available.
+
+- **Error handling**: add error handling when retrieving the high score from local storage in case the value is not a valid number. You could use *isNaN()* to check for this.
+
+- **`highScore.textContent = FORMATTED_HIGH_SCORE`**: updates the _textContent_ of the score element with the formatted score string.
 
 ### License
 -----

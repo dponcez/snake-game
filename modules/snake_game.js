@@ -123,84 +123,88 @@ const startSnakeGame = () => {
 }
 
 const setSnakeDirection = (event) => {
-  const keyboardEvents = [{
-    "left": "ArrowLeft",
-    "up": "ArrowUp",
-    "right": "ArrowRight",
-    "down": "ArrowDown"
-  }];
+  const keyboardEvents = [
+    {
+      left: "ArrowLeft",
+      up: "ArrowUp",
+      right: "ArrowRight",
+      down: "ArrowDown",
+    },
+  ];
 
   const KEY = event.key;
   const KEY_CODE = event.code;
 
-  if((!gameStarted && KEY_CODE === 'Space')){
+  if (!gameStarted && KEY_CODE === "Space") {
     gameStarted = true;
+    
     startSnakeGame();
-    return
-  }else{
-    keyboardEvents.forEach(arrow => {
+    return;
+  } else {
+    keyboardEvents.forEach((arrow) => {
       const { left, up, right, down } = arrow;
 
-      if(KEY === left) direction = 'left';
-      if(KEY === up) direction = 'up';
-      if(KEY === right) direction = 'right';
-      if(KEY === down) direction = 'down'
-    })
+      if (KEY === left) direction = "left";
+      if (KEY === up) direction = "up";
+      if (KEY === right) direction = "right";
+      if (KEY === down) direction = "down";
+    });
   }
-}
+};
 
-const handleKeyPress = debounce(setSnakeDirection, 100)
-eventHandler(document, 'keydown', handleKeyPress)
+const handleKeyPress = debounce(setSnakeDirection, 100);
+eventHandler(document, "keydown", handleKeyPress);
 
 const incrementSpeedLimit = () => {
   const MIN_SPEED_LIMIT = 20;
 
   const decrements = [
-    {threshold: 150, decrement: 5},
-    {threshold: 100, decrement: 3},
-    {threshold: 50, decrement: 1}
+    { threshold: 150, decrement: 5 },
+    { threshold: 100, decrement: 3 },
+    { threshold: 50, decrement: 1 },
   ];
 
-  for(const { threshold, decrement} of decrements){
-    if(speedLimit > threshold){
+  for (const { threshold, decrement } of decrements) {
+    if (speedLimit > threshold) {
       speedLimit = Math.max(MIN_SPEED_LIMIT, speedLimit - decrement);
-      return
+      return;
     }
   }
 
   speedLimit = Math.max(MIN_SPEED_LIMIT, speedLimit - 1);
-}
+};
 
 const snakeCollision = () => {
   const HEAD = snakeCoords[0];
-  
-  const SNAKE_HIT_WALL = HEAD.x < 1 || HEAD.x > GRID_SIZE || HEAD.y < 1 || HEAD.y > GRID_SIZE;
 
-  if(SNAKE_HIT_WALL){
+  const SNAKE_HIT_WALL =
+    HEAD.x < 1 || HEAD.x > GRID_SIZE || HEAD.y < 1 || HEAD.y > GRID_SIZE;
+
+  if (SNAKE_HIT_WALL) {
     resetSnakeGame();
-    return
+    return;
   }
 
-  for(let i = 1; i < snakeCoords.length; i++){
-    const SNAKE_COLLISION = HEAD.x === snakeCoords[i].x && HEAD.y === snakeCoords[i].y;
+  for (let i = 1; i < snakeCoords.length; i++) {
+    const SNAKE_COLLISION =
+      HEAD.x === snakeCoords[i].x && HEAD.y === snakeCoords[i].y;
 
-    if(SNAKE_COLLISION){
+    if (SNAKE_COLLISION) {
       resetSnakeGame();
-      return
+      return;
     }
   }
-}
+};
 
 const snakeBrickCollision = () => {
   const HEAD = { ...snakeCoords[0] };
-
   const SNAKE_HIT_BRICK = HEAD.x === brick.x && HEAD.y === brick.y;
 
-  if(SNAKE_HIT_BRICK){
+  if (SNAKE_HIT_BRICK) {
     resetSnakeGame();
-    return
+    return;
   }
-}
+};
 
 const resetSnakeGame = () => {
   updateHighScore();
@@ -210,7 +214,7 @@ const resetSnakeGame = () => {
 
   snakeCoords = [{ x: Math.floor(GRID_SIZE / 2), y: Math.floor(GRID_SIZE / 2) }];
   food = generateGameElement(GRID_SIZE);
-  direction = 'right';
+  direction = "right";
   speedLimit = 200;
   score.textContent = 0;
 
@@ -221,7 +225,8 @@ const resetSnakeGame = () => {
 const stopGame = () => {
   gameStarted = false;
   clearInterval(interval);
-}
+  interval = null;
+};
 
 const updateScore = () => {
   const currentScore = snakeCoords.length - 1;
@@ -243,21 +248,21 @@ const updateHighScore = () => {
 };
 
 // When the game loads, retrieve the high score from local storage:
-window.addEventListener('DOMContentLoaded', () => {
-  const STORED_HIGH_SCORE = localStorage.getItem('high-score');
+window.addEventListener("DOMContentLoaded", () => {
+  const STORED_HIGH_SCORE = localStorage.getItem("high-score");
 
-  if(STORED_HIGH_SCORE){
+  if (STORED_HIGH_SCORE) {
     try {
       const PARSED_SCORE = JSON.parse(STORED_HIGH_SCORE);
-      if(isNaN(PARSED_SCORE)){
+      if (isNaN(PARSED_SCORE)) {
         log(`Invalid score: ${PARSED_SCORE}`);
         return;
       }
 
       scoreIndex = parseInt(STORED_HIGH_SCORE, 10);
-      highScore.textContent = String(scoreIndex).padStart(3, '0');
-    }catch(error){
-      log(`Error parsing score: ${error}`)
+      highScore.textContent = String(scoreIndex).padStart(3, "0");
+    } catch (error) {
+      log(`Error parsing score: ${error}`);
     }
   }
-})
+});
